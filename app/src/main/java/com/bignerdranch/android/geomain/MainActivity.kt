@@ -2,6 +2,7 @@ package com.bignerdranch.android.geomain
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
@@ -14,5 +15,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
+
+        trueButton.setOnClickListener { view: View ->
+
+        }
+        falseButton.setOnClickListener { view: View ->
+
+        }
     }
 }
