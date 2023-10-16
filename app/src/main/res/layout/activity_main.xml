@@ -28,11 +28,18 @@
             android:id="@+id/false_button"
             android:text="@string/false_button" />
     </LinearLayout>
-    <Button
+
+    <ImageButton
         android:id="@+id/next_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next_button"
-        android:drawableEnd="@drawable/arrow_right"
-        android:drawablePadding="4dp" />
+        android:layout_width="53dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/next_button"
+        android:src="@drawable/arrow_right" />
+
+    <ImageButton
+        android:id="@+id/prev_button"
+        android:layout_width="52dp"
+        android:layout_height="51dp"
+        android:contentDescription="@string/prev_button"
+        android:src="@drawable/arrow_left" />
 </LinearLayout>
