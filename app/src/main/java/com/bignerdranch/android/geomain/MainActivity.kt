@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
+        currentIndex=savedInstanceState?.getInt("cur_key")?:0
+        trueAnswer=savedInstanceState?.getDouble("result")?:0.0
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
@@ -95,6 +97,15 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy() called")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState?.run {
+            outState.putInt("cur_key", currentIndex)
+            outState.putDouble("result", trueAnswer)
+        }
+        updateQuestion()
     }
     private fun updateQuestion() {
         val questionTextResId = questionBank[currentIndex].textResId
