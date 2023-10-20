@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.math.roundToLong
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_asia, true))
 
     private var currentIndex = 0
+    private var trueAnswer = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
@@ -36,26 +38,34 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
+
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
+            falseButton.isEnabled = false
+            trueButton.isEnabled = false
+            checkCurInd()
         }
         falseButton.setOnClickListener { view: View ->
             checkAnswer(false)
+            falseButton.isEnabled = false
+            trueButton.isEnabled = false
+            checkCurInd()
         }
         nextButton.setOnClickListener {
+            falseButton.isEnabled = true
+            trueButton.isEnabled = true
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
+            nextButton.visibility = View.INVISIBLE
+            prevButton.visibility = View.INVISIBLE
         }
         prevButton.setOnClickListener {
-            if (currentIndex == 0){
-                currentIndex = questionBank.size
-                currentIndex = (currentIndex - 1) % questionBank.size
-                updateQuestion()
-            }
-            else{
-                currentIndex = (currentIndex - 1) % questionBank.size
-                updateQuestion()
-            }
+            falseButton.isEnabled = true
+            trueButton.isEnabled = true
+            currentIndex = (currentIndex - 1) % questionBank.size
+            updateQuestion()
+            prevButton.visibility = View.INVISIBLE
+            nextButton.visibility = View.INVISIBLE
         }
         questionTextView.setOnClickListener {
             currentIndex = (currentIndex + 1) % questionBank.size
@@ -90,6 +100,21 @@ class MainActivity : AppCompatActivity() {
         val questionTextResId = questionBank[currentIndex].textResId
         questionTextView.setText(questionTextResId)
     }
+    private fun checkCurInd(){
+        if (currentIndex == questionBank.size - 1){
+            prevButton.visibility = View.VISIBLE
+            val percentTrue = ((trueAnswer / questionBank.size) * 100.0).roundToLong()
+            val result = "$percentTrue%"
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        }
+        else if (currentIndex == 0){
+            nextButton.visibility = View.VISIBLE
+        }
+        else{
+            nextButton.visibility = View.VISIBLE
+            prevButton.visibility = View.VISIBLE
+        }
+    }
     private fun checkAnswer(userAnswer: Boolean){
         val correctAnswer = questionBank[currentIndex].answer
         val messageResId = if (userAnswer == correctAnswer) {
@@ -97,6 +122,9 @@ class MainActivity : AppCompatActivity() {
         } else{
             R.string.incorrect_toast
         }
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).apply {setGravity(Gravity.TOP, 0, 500); show() }
+        if (userAnswer == correctAnswer){
+            trueAnswer +=  1
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).apply {setGravity(Gravity.TOP, 0, 0); show() }
     }
 }
