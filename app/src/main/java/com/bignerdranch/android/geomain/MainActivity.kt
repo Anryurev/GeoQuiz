@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import kotlin.math.roundToLong
 
 private const val TAG = "MainActivity"
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var questionTextView: TextView
 
     private var trueAnswer = 0.0
+    private val quizViewModel: QuizViewModel by lazy{
+        ViewModelProviders.of(this).get(QuizViewModel::class.java)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
@@ -68,9 +72,6 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
         setContentView(R.layout.activity_main)
-        val provider: ViewModelProvider = ViewModelProviders.of(this)
-        val quizViewModel = provider.get(QuizViewModel::class.java)
-        Log.d(TAG, "Got a QuizViewModel:$quizViewModel")
         trueButton = findViewById(R.id.true_button)
         updateQuestion()
     }
