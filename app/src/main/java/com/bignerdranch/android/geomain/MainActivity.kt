@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlin.math.roundToLong
 
 private const val TAG = "MainActivity"
@@ -73,6 +75,11 @@ class MainActivity : AppCompatActivity() {
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
+        setContentView(R.layout.activity_main)
+        val provider: ViewModelProvider = ViewModelProviders.of(this)
+        val quizViewModel = provider.get(QuizViewModel::class.java)
+        Log.d(TAG, "Got a QuizViewModel:$quizViewModel")
+        trueButton = findViewById(R.id.true_button)
         updateQuestion()
     }
 
