@@ -1,6 +1,8 @@
 package com.bignerdranch.android.geomain
 
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 
 private const val TAG = "QuizViewModel"
@@ -19,7 +21,14 @@ class QuizViewModel : ViewModel() {
         get() = questionBank[currentIndex].answer
     val currentQuestionText: Int
         get() = questionBank[currentIndex].textResId
+    val questionSize = questionBank.size
     fun moveToNext(){
         currentIndex = (currentIndex + 1) % questionBank.size
+    }
+    fun moveToPrev(){
+        currentIndex = (currentIndex - 1) % questionBank.size
+    }
+    fun getCurInd(): Int{
+        return currentIndex
     }
 }

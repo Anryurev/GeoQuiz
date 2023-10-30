@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
-        currentIndex=savedInstanceState?.getInt("cur_key")?:0
         trueAnswer=savedInstanceState?.getDouble("result")?:0.0
 
         trueButton.setOnClickListener { view: View ->
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         nextButton.setOnClickListener {
             falseButton.isEnabled = true
             trueButton.isEnabled = true
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
             nextButton.visibility = View.INVISIBLE
             prevButton.visibility = View.INVISIBLE
@@ -62,17 +61,15 @@ class MainActivity : AppCompatActivity() {
         prevButton.setOnClickListener {
             falseButton.isEnabled = true
             trueButton.isEnabled = true
-            currentIndex = (currentIndex - 1) % questionBank.size
+            quizViewModel.moveToPrev()
             updateQuestion()
             prevButton.visibility = View.INVISIBLE
             nextButton.visibility = View.INVISIBLE
         }
         questionTextView.setOnClickListener {
-            currentIndex = (currentIndex + 1) % questionBank.size
+            quizViewModel.moveToNext()
             updateQuestion()
         }
-        setContentView(R.layout.activity_main)
-        trueButton = findViewById(R.id.true_button)
         updateQuestion()
     }
 
@@ -102,23 +99,22 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState?.run {
-            outState.putInt("cur_key", currentIndex)
             outState.putDouble("result", trueAnswer)
         }
         updateQuestion()
     }
     private fun updateQuestion() {
-        val questionTextResId = questionBank[currentIndex].textResId
+        val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
     }
     private fun checkCurInd(){
-        if (currentIndex == questionBank.size - 1){
+        if (quizViewModel.getCurInd() == quizViewModel.questionSize - 1){
             prevButton.visibility = View.VISIBLE
-            val percentTrue = ((trueAnswer / questionBank.size) * 100.0).roundToLong()
+            val percentTrue = ((trueAnswer / quizViewModel.questionSize) * 100.0).roundToLong()
             val result = "$percentTrue%"
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         }
-        else if (currentIndex == 0){
+        else if (quizViewModel.getCurInd() == 0){
             nextButton.visibility = View.VISIBLE
         }
         else{
@@ -127,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun checkAnswer(userAnswer: Boolean){
-        val correctAnswer = questionBank[currentIndex].answer
+        val correctAnswer = quizViewModel.currentQuestionAnswer
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
         } else{
