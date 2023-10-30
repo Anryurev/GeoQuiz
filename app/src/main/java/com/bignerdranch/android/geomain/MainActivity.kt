@@ -15,6 +15,7 @@ import androidx.lifecycle.get
 import kotlin.math.roundToLong
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var trueButton: Button
@@ -31,12 +32,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle?) called")
         setContentView(R.layout.activity_main)
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
+        quizViewModel.currentIndex = currentIndex
+        trueAnswer=savedInstanceState?.getDouble("result")?:0.0
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
-        trueAnswer=savedInstanceState?.getDouble("result")?:0.0
 
         trueButton.setOnClickListener { view: View ->
             checkAnswer(true)
@@ -85,8 +88,18 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() called")
-    }
 
+    }
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveInstaceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+
+        savedInstanceState?.run {
+            savedInstanceState.putDouble("result", trueAnswer)
+        }
+        updateQuestion()
+    }
     override fun onStop() {
         super.onStop()
         Log.d(TAG, "onStop() called")
@@ -94,14 +107,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy() called")
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState?.run {
-            outState.putDouble("result", trueAnswer)
-        }
-        updateQuestion()
     }
     private fun updateQuestion() {
         val questionTextResId = quizViewModel.currentQuestionText
