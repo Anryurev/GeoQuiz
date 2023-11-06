@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var falseButton: Button
     private lateinit var nextButton: ImageButton
     private lateinit var prevButton: ImageButton
+    private lateinit var cheatButton: Button
     private lateinit var questionTextView: TextView
 
     private var trueAnswer = 0.0
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
+        cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener { view: View ->
@@ -61,6 +63,10 @@ class MainActivity : AppCompatActivity() {
             nextButton.visibility = View.INVISIBLE
             prevButton.visibility = View.INVISIBLE
         }
+        cheatButton.setOnClickListener {
+            // Начало CheatActivity
+        }
+
         prevButton.setOnClickListener {
             falseButton.isEnabled = true
             trueButton.isEnabled = true
