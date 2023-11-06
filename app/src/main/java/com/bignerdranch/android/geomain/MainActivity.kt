@@ -65,8 +65,9 @@ class MainActivity : AppCompatActivity() {
             prevButton.visibility = View.INVISIBLE
         }
         cheatButton.setOnClickListener {
-            // Начало CheatActivity
-            val intent = Intent(this, CheatActivity::class.java)
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+
             startActivity(intent)
         }
 
