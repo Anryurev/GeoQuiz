@@ -17,6 +17,7 @@ import kotlin.math.roundToLong
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
+private const val REQUEST_CODE_CHEAT = 0
 class MainActivity : AppCompatActivity() {
 
     private lateinit var trueButton: Button
@@ -68,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
 
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
         }
 
         prevButton.setOnClickListener {
